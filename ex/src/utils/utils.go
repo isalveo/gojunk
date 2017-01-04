@@ -11,6 +11,8 @@ import (
   "strings"
   "os"
   "bufio"
+  "errors"
+  "os/user"
 )
 
 
@@ -150,4 +152,33 @@ func include(s []string, el string) bool{
     }
   }
   return false
+}
+
+func HandleConnection(conn net.Conn) {
+  defer conn.Close()
+
+  reader := bufio.NewReader(conn)
+  user, _ , _ := reader.ReadLine()
+
+  if info, err := getUserInfo(string(user)); err != nil {
+    conn.Write([]byte(err.Error()))
+  } else {
+    conn.Write(info)
+  }
+}
+
+func getUserInfo(usr string) ([]byte, error) {
+  u, e := user.Lookup(usr)
+
+  if e != nil {
+    return nil, e
+  }
+
+  data, err := ioutil.ReadFile(u.HomeDir + ".plan")
+
+  if err != nil {
+    return data, errors.New("No file found!")
+  }
+
+  return data, nil
 }
