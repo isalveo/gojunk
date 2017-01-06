@@ -6,12 +6,13 @@ import (
 	"mapUtil"
 	"maxUtil"
 	"time"
+  // "even"
 	// "trees"
 	// "crawler"
-	"utils"
-	"net"
+	// "utils"
+	// "net"
 	// "cruncher"
-	"flag"
+	// "flag"
 	// "listUtil"
 	// "cat"
 	// "io"
@@ -400,21 +401,68 @@ func main() {
 	// cruncher.Solve(f, list, 0, magic)
 
 	//Finger
-     flag.Parse()
-     ln, err := net.Listen("tcp", ":79")
 
-     if err != nil {
-      fmt.Printf("Failed: %v", err.Error())
-     }
+     // flag.Parse()
+     // ln, err := net.Listen("tcp", ":79")
 
-     for {
-      l, err := ln.Accept()
-      if err != nil {
-        continue
-      } else {
-        go utils.HandleConnection(l)
-      }
-     }
+     // if err != nil {
+     //  fmt.Printf("Failed: %v", err.Error())
+     // }
+
+     // defer func() {
+     //  err := recover()
+     //  fmt.Printf("Error %v\n", err)
+     // }()
+
+     // for {
+     //  l, err := ln.Accept()
+     //  if err != nil {
+     //    continue
+     //  } else {
+     //    go utils.HandleConnection(l)
+     //  }
+     // }
+     // x, y := 1, 2
+     // even.Swap(&x, &y)
+
+     // z := 1.5
+     // even.Square(&z)
+
+     // fmt.Printf("%v %v %v", x, y, z)
+     c := make(chan string)
+     go g1(c)
+     go g2(c)
+     go gg(c)
+
+     var input string
+     fmt.Scanln(&input)
+}
+
+func gg(c <-chan string) {
+  timeout := time.After(10*time.Second)
+  // for {
+  select{
+    case c1 := <- c:
+      fmt.Println(c1)
+    case c2 := <- c:
+      fmt.Println(c2)
+    case <- timeout:
+      fmt.Println("Timeout")
+    // default:
+    //   fmt.Println("...waiting")
+    //   time.Sleep(500*time.Millisecond)
+    }
+  // }
+}
+
+func g1(c chan<- string) {
+  time.Sleep(5*time.Second)
+  c <- "BOOM1"
+}
+
+func g2(c chan<- string) {
+  time.Sleep(5*time.Second)
+  c <- "BOOM2"
 }
 
 func Shower(i, q <-chan int) {
